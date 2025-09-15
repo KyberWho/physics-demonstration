@@ -1,0 +1,139 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "libs/glfw",
+					"jsonFile" : "directory-libs.glfw-Debug-3723632b532fa2784268.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "libs/glfw"
+				},
+				{
+					"build" : "src/app",
+					"jsonFile" : "directory-src.app-Debug-de77eec203e76141027b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src/app",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "src/core",
+					"jsonFile" : "directory-src.core-Debug-27980f60b5df84566cd6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src/core",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "src/utils",
+					"jsonFile" : "directory-src.utils-Debug-63aae164cb9969211904.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src/utils",
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					],
+					"name" : "physics-demonstration",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 3,
+					"id" : "core::@0618756b1ff51bca1a0e",
+					"jsonFile" : "target-core-Debug-bb035d56e8524a234547.json",
+					"name" : "core",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "physics-simulation::@ff93792cf40911dae1b8",
+					"jsonFile" : "target-physics-simulation-Debug-b4e4bd460466f487a455.json",
+					"name" : "physics-simulation",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "utils::@f1b38b22aeb65474a6c5",
+					"jsonFile" : "target-utils-Debug-863259c1be251cc1a4fe.json",
+					"name" : "utils",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug",
+		"source" : "D:/Repositories/Side Projects/physics-demonstration"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

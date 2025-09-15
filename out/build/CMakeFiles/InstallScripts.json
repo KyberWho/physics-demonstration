@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/Repositories/Side Projects/physics-demonstration/out/build/cmake_install.cmake",
+		"D:/Repositories/Side Projects/physics-demonstration/out/build/libs/glfw/cmake_install.cmake",
+		"D:/Repositories/Side Projects/physics-demonstration/out/build/src/app/cmake_install.cmake",
+		"D:/Repositories/Side Projects/physics-demonstration/out/build/src/core/cmake_install.cmake",
+		"D:/Repositories/Side Projects/physics-demonstration/out/build/src/utils/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

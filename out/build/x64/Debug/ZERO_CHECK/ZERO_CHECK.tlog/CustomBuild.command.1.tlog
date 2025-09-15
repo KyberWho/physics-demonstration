@@ -1,0 +1,10 @@
+^D:\REPOSITORIES\SIDE PROJECTS\PHYSICS-DEMONSTRATION\OUT\BUILD\CMAKEFILES\00129037FB5BDBE61AA8B8BBFC7A06D0\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SD:/Repositories/Side Projects/physics-demonstration" "-BD:/Repositories/Side Projects/physics-demonstration/out/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "D:/Repositories/Side Projects/physics-demonstration/out/build/physics-demonstration.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

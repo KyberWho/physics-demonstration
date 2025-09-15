@@ -1,0 +1,13 @@
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/CMakeFiles/edit_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/libs/glfw/CMakeFiles/edit_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/libs/glfw/CMakeFiles/rebuild_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/app/CMakeFiles/physics-simulation.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/app/CMakeFiles/edit_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/app/CMakeFiles/rebuild_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/core/CMakeFiles/core.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/core/CMakeFiles/edit_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/core/CMakeFiles/rebuild_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/utils/CMakeFiles/utils.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/utils/CMakeFiles/edit_cache.dir
+D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/utils/CMakeFiles/rebuild_cache.dir
