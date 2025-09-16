@@ -1,6 +1,0 @@
-D:/Repositories/Side Projects/physics-demonstration/out/build/CMakeFiles/ALL_BUILD.dir
-D:/Repositories/Side Projects/physics-demonstration/out/build/CMakeFiles/ZERO_CHECK.dir
-D:/Repositories/Side Projects/physics-demonstration/out/build/libs/glad2/CMakeFiles/glad.dir
-D:/Repositories/Side Projects/physics-demonstration/out/build/src/app/CMakeFiles/physics-simulation.dir
-D:/Repositories/Side Projects/physics-demonstration/out/build/src/core/CMakeFiles/core.dir
-D:/Repositories/Side Projects/physics-demonstration/out/build/src/utils/CMakeFiles/utils.dir
