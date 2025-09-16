@@ -1,6 +1,23 @@
+// Configuration constants for the application
+
+// -------------------------------------------------------------------------------
+// APPLICATION INFO
+// -------------------------------------------------------------------------------
+
 #define APP_NAME				"@PROJECT_NAME@"
 #define APP_VERSION_MAJOR		@PROJECT_VERSION_MAJOR@
 #define APP_VERSION_MINOR		@PROJECT_VERSION_MINOR@
 
+// -------------------------------------------------------------------------------
+// APPLICATION PARAMETERS
+// -------------------------------------------------------------------------------
+
+#define OPENGL_DEBUG_MODE		@OPENGL_DEBUG_MODE@	
+
+// -------------------------------------------------------------------------------
+// WINDOW CONFIG
+// -------------------------------------------------------------------------------
+
 #define WINDOW_DEFAULT_WIDTH	1280
 #define WINDOW_DEFAULT_HEIGHT	720
+

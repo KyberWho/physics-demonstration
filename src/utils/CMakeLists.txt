@@ -2,6 +2,6 @@ add_library(utils STATIC
 	Miscellaneous.cpp
 )
 
-target_include_directories(core PUBLIC
+target_include_directories(utils PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 )

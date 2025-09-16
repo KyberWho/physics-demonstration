@@ -1,6 +1,9 @@
 # Sets up the core library
 add_library(core STATIC
-	Application.cpp
+	"Application.cpp"
+	"Application.h"
+	"Logger.cpp" 
+	"Logger.h"
 )
 
 # Allows one singular point of configuration for the entire project
@@ -16,6 +19,6 @@ target_include_directories(core PUBLIC
 # Link any required libraries
 target_link_libraries(core 
 	PUBLIC
-		thirdparty_windowing
+		thirdparty_rendering
 		utils
 )	

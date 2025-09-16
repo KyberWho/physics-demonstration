@@ -1,7 +1,17 @@
 ﻿# CMakeList.txt : Top-level CMake project file, do global configuration
 # and include sub-projects here.
 cmake_minimum_required (VERSION 3.16)
-project("physics-demonstration" VERSION 0.3)
+project("physics-demonstration" VERSION 0.4)
+
+# -------------------------------------------------------------------------------
+# APPLICATION PARAMETERS (edit these values if needed)
+# -------------------------------------------------------------------------------
+
+set(OPENGL_DEBUG_MODE false)
+
+# -------------------------------------------------------------------------------
+# BUILD CONFIGURATION
+# -------------------------------------------------------------------------------
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 11)
@@ -14,7 +24,7 @@ if (POLICY CMP0141)
 endif()
 
 # Include third-party dependencies
-add_subdirectory("libs/glfw")
+add_subdirectory("libs")
 
 # Include engine modules.
 add_subdirectory("src/app")

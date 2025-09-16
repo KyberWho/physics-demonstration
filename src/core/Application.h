@@ -2,10 +2,21 @@
 // e.g input polling, window resizing, etc.
 #pragma once
 
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include "Miscellaneous.h"
+#include "Logger.h"
 #include "Config.h"
+
+// -------------------------------------------------------------------------------
+// HELPER FUNCTIONS
+// -------------------------------------------------------------------------------
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+
+// -------------------------------------------------------------------------------
+// APPLICATION CLASS
+// -------------------------------------------------------------------------------
 
 // TODO: Separate window management into its individual components (keeping with single responsibility rule)?
 // Class to handle everything to do with the application lifecycle
