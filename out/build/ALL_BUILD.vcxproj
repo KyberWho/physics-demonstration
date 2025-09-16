@@ -178,6 +178,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{844A52D2-1749-3F0A-B4C0-1DFDB488452F}</Project>
       <Name>core</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Repositories\Side Projects\physics-demonstration\out\build\libs\glad2\glad.vcxproj">
+      <Project>{173FED91-5D93-31A2-8A14-43E15300FC2C}</Project>
+      <Name>glad</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Repositories\Side Projects\physics-demonstration\out\build\src\app\physics-simulation.vcxproj">
       <Project>{C8F6199F-398F-3DBF-81BB-36DA49B65713}</Project>
       <Name>physics-simulation</Name>

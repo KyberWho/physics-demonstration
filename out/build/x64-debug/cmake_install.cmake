@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/libs/glfw/cmake_install.cmake")
+  include("D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/libs/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

@@ -86,7 +86,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Repositories/Side Projects/physics-demonstration/libs/glfw/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -110,10 +110,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -121,7 +121,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\core\Debug\core.lib;..\utils\Debug\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\core\Debug\core.lib;..\utils\Debug\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;..\..\libs\glad2\Debug\glad.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Repositories/Side Projects/physics-demonstration/libs/glfw/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -165,10 +165,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -176,7 +176,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\core\Release\core.lib;..\utils\Release\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\core\Release\core.lib;..\utils\Release\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;..\..\libs\glad2\Release\glad.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -195,7 +195,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Repositories/Side Projects/physics-demonstration/libs/glfw/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -220,10 +220,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -231,7 +231,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\core\MinSizeRel\core.lib;..\utils\MinSizeRel\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\core\MinSizeRel\core.lib;..\utils\MinSizeRel\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;..\..\libs\glad2\MinSizeRel\glad.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -250,7 +250,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Repositories/Side Projects/physics-demonstration/libs/glfw/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -274,10 +274,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Repositories\Side Projects\physics-demonstration\src\core;D:\Repositories\Side Projects\physics-demonstration\out\build\src\core;D:\Repositories\Side Projects\physics-demonstration\libs\glad2\include;D:\Repositories\Side Projects\physics-demonstration\src\utils;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -285,7 +285,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\core\RelWithDebInfo\core.lib;..\utils\RelWithDebInfo\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\core\RelWithDebInfo\core.lib;..\utils\RelWithDebInfo\utils.lib;D:\Repositories\Side Projects\physics-demonstration\libs\glfw\lib\glfw3.lib;..\..\libs\glad2\RelWithDebInfo\glad.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -373,6 +373,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="D:\Repositories\Side Projects\physics-demonstration\out\build\src\core\core.vcxproj">
       <Project>{844A52D2-1749-3F0A-B4C0-1DFDB488452F}</Project>
       <Name>core</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Repositories\Side Projects\physics-demonstration\out\build\libs\glad2\glad.vcxproj">
+      <Project>{173FED91-5D93-31A2-8A14-43E15300FC2C}</Project>
+      <Name>glad</Name>
     </ProjectReference>
     <ProjectReference Include="D:\Repositories\Side Projects\physics-demonstration\out\build\src\utils\utils.vcxproj">
       <Project>{F5029E5E-416A-3AE6-A47F-010F3F0628D4}</Project>

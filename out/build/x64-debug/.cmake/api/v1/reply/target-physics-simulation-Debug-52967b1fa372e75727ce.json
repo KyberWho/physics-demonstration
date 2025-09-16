@@ -19,7 +19,7 @@
 		"files" : 
 		[
 			"src/app/CMakeLists.txt",
-			"libs/glfw/CMakeLists.txt"
+			"libs/CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -44,7 +44,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 13,
+				"line" : 10,
 				"parent" : 3
 			}
 		]
@@ -67,6 +67,10 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/Repositories/Side Projects/physics-demonstration/out/build/x64-debug/src/core"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/Repositories/Side Projects/physics-demonstration/libs/glad2/include"
 				},
 				{
 					"backtrace" : 2,
@@ -95,6 +99,10 @@
 	],
 	"dependencies" : 
 	[
+		{
+			"backtrace" : 2,
+			"id" : "glad::@2d51ba1bf2288309b077"
+		},
 		{
 			"backtrace" : 2,
 			"id" : "core::@0618756b1ff51bca1a0e"
@@ -130,6 +138,11 @@
 			{
 				"backtrace" : 4,
 				"fragment" : "\"D:\\Repositories\\Side Projects\\physics-demonstration\\libs\\glfw\\lib\\glfw3.lib\"",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "libs\\glad2\\glad.lib",
 				"role" : "libraries"
 			},
 			{

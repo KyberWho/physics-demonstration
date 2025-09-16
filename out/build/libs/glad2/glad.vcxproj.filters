@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Repositories\Side Projects\physics-demonstration\libs\glad2\src\gl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Repositories\Side Projects\physics-demonstration\libs\glad2\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E7B935A1-EC03-3418-B02C-788F9E41363B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
