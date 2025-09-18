@@ -1,9 +1,11 @@
 // This module handles logging functionality, including errors, warnings and info messages.
-// TODO: Need to find a way to remove GLFW and avoid cyclic dependency
 #pragma once
 
+// -------------------------------------------------------------------------------
+// HEADER FILES/DEPENDENCIES
+// -------------------------------------------------------------------------------
+
 #include <iostream>
-#include <GLFW/glfw3.h>
 
 // -------------------------------------------------------------------------------
 // LOGGING MACROS

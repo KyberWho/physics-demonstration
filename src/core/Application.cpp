@@ -5,7 +5,7 @@
 // -------------------------------------------------------------------------------
 
 // Callback function to adjust the viewport when the window is resized
-void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
@@ -17,12 +17,19 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 // Static member initialization (via 9.4.2 of C++ standard)
 GLFWwindow* Application::m_CurrentWindow;
 
+bool Application::m_RetrievedLibraries;
+
+bool Application::m_AppRunning;
+bool Application::m_InFullscreen;
+
 // Initialises the window instance of the application
 bool Application::CreateWindow()
 {
     if (!glfwInit())
     {
         LOG_ERR("Failed to initialize GLFW\n");
+        m_CurrentWindow = nullptr;
+
         return false;
     }
 
@@ -33,14 +40,16 @@ bool Application::CreateWindow()
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, OPENGL_DEBUG_MODE);
 
     m_CurrentWindow = glfwCreateWindow(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, APP_NAME, NULL, NULL);
+    m_InFullscreen = false;
+
     if (!m_CurrentWindow)
     {
-		Application::TerminateWindow();
+		Application::Shutdown();
         return false;
     }
 
     glfwMakeContextCurrent(m_CurrentWindow);
-	glfwSetFramebufferSizeCallback(m_CurrentWindow, framebufferSizeCallback);
+	glfwSetFramebufferSizeCallback(m_CurrentWindow, FramebufferSizeCallback);
 
     int version = gladLoadGL(glfwGetProcAddress);
     if (version == 0)
@@ -51,17 +60,28 @@ bool Application::CreateWindow()
 
 	LOG_INFO("OpenGL " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << " has been loaded.");
 
+    m_AppRunning, m_RetrievedLibraries = true;
+
     return true;
 }
 
-void Application::TerminateWindow()
+void Application::Shutdown()
 {
+    m_AppRunning = false;
+
+    glfwDestroyWindow(m_CurrentWindow);
     glfwTerminate();
 }
 
 // Main application loop (need to refactor this to separate event handling and rendering)
-bool Application::UpdateWindow()
+void Application::Run()
 {
+    if (m_AppRunning) 
+    {
+        LOG_WARN("Application is already running!");
+        return;
+    }
+
     while(!glfwWindowShouldClose(m_CurrentWindow))
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -69,5 +89,33 @@ bool Application::UpdateWindow()
         glfwPollEvents();
     }
 
-    return false; // When window is closed, return false
+    Application::Shutdown();
+}
+
+void Application::SetFullscreen()
+{
+    GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* currentMode = glfwGetVideoMode(currentMonitor);
+    
+    if (!m_InFullscreen)
+    {
+        m_InFullscreen = true;
+        glfwSetWindowMonitor(m_CurrentWindow, currentMonitor, 0, 0, currentMode->width, 
+            currentMode->height, currentMode->refreshRate);
+    }
+    else 
+    {
+        m_InFullscreen = false;
+        glfwSetWindowMonitor(m_CurrentWindow, NULL, 0, 0, currentMode->width,
+            currentMode->height, currentMode->refreshRate);
+    }
+}
+
+// -------------------------------------------------------------------------------
+// INPUT CLASS
+// -------------------------------------------------------------------------------
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+
 }
