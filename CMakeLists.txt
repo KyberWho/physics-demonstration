@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : Top-level CMake project file, do global configuration
 # and include sub-projects here.
 cmake_minimum_required (VERSION 3.16)
-project("physics-demonstration" VERSION 0.4)
+project("physics-demonstration" VERSION 0.5)
 
 # -------------------------------------------------------------------------------
 # APPLICATION PARAMETERS (edit these values if needed)
@@ -14,7 +14,7 @@ set(OPENGL_DEBUG_MODE false)
 # -------------------------------------------------------------------------------
 
 # Specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Enable Hot Reload for MSVC compilers if supported.

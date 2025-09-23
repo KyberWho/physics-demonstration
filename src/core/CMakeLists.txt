@@ -2,10 +2,10 @@
 add_library(core STATIC
 	"Application.cpp"
 	"Application.h"
-	"Logger.cpp" 
-	"Logger.h"
 	"TimeManager.h" 
 	"TimeManager.cpp"
+	"Input.cpp" 
+	"Input.h"
 )
 
 # Allows one singular point of configuration for the entire project

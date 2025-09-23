@@ -62,12 +62,16 @@ bool Application::CreateWindow()
 
     m_AppRunning, m_RetrievedLibraries = true;
 
+    InputHandler::Init(m_CurrentWindow);
+
     return true;
 }
 
 void Application::Shutdown()
 {
     m_AppRunning = false;
+    InputHandler::ReleaseAllActions();
+    ActionHandler::RemoveAllActions();
 
     glfwDestroyWindow(m_CurrentWindow);
     glfwTerminate();
@@ -82,16 +86,20 @@ void Application::Run()
         return;
     }
 
+    ActionHandler::CreateAction(GLFW_KEY_F11, Application::SetFullscreen, "Toggle Fullscreen");
+    InputHandler::AttachAction(ActionHandler::RetrieveAction("Toggle Fullscreen"), GLFW_PRESS);
+
     while(!glfwWindowShouldClose(m_CurrentWindow))
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
         glfwSwapBuffers(m_CurrentWindow);
         glfwPollEvents();
     }
-
+    
     Application::Shutdown();
 }
 
+// Need to find a way to efficiently store the original width/height of the object
 void Application::SetFullscreen()
 {
     GLFWmonitor* currentMonitor = glfwGetPrimaryMonitor();
@@ -109,13 +117,4 @@ void Application::SetFullscreen()
         glfwSetWindowMonitor(m_CurrentWindow, NULL, 0, 0, currentMode->width,
             currentMode->height, currentMode->refreshRate);
     }
-}
-
-// -------------------------------------------------------------------------------
-// INPUT CLASS
-// -------------------------------------------------------------------------------
-
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-
 }
