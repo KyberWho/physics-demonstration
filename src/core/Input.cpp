@@ -19,32 +19,32 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 // -------------------------------------------------------------------------------
 
 // Just a whole bunch of getter-setter functions for each attribute
-int& ActionAttributes::GetKey() { return bindedKey; }
+int ActionAttributes::GetKey() const { return m_BindedKey; }
 void ActionAttributes::SetKey(int currentKey)
 {
-	bindedKey = currentKey;
+	m_BindedKey = currentKey;
 }
 
-std::string ActionAttributes::GetName() { return actionName; }
-void ActionAttributes::SetName(std::string givenName)
+std::string ActionAttributes::GetName() const { return m_ActionName; }
+void ActionAttributes::SetName(const std::string& givenName)
 {
-	actionName = givenName;
+	m_ActionName = givenName;
 }
 
-std::function<void()> ActionAttributes::GetFunction() { return actionFunction; }
-void ActionAttributes::SetFunction(std::function<void()> currentFunction)
+std::function<void()> ActionAttributes::GetFunction() const { return m_ActionFunction; }
+void ActionAttributes::SetFunction(const std::function<void()> currentFunction)
 {
-	actionFunction = currentFunction;
+	m_ActionFunction = currentFunction;
 }
 
 void ActionAttributes::SetToggleable(bool toggleable)
 {
-	toggleableAction = toggleable;
+	m_Toggleable = toggleable;
 }
 
 void ActionAttributes::SetUnavailable(bool unavailable)
 {
-	actionUnavailable = unavailable;
+	m_Unavailable = unavailable;
 }
 
 // -------------------------------------------------------------------------------
@@ -53,19 +53,19 @@ void ActionAttributes::SetUnavailable(bool unavailable)
 
 Action::Action()
 {
-	currentAttributes = new ActionAttributes();
+	m_CurrentAttributes = new ActionAttributes();
 }
 
 Action::~Action()
 {
-	delete currentAttributes;
+	delete m_CurrentAttributes;
 }
 
-ActionAttributes* Action::accessAttributes() { return currentAttributes; }
+ActionAttributes* Action::AccessAttributes() const { return m_CurrentAttributes; }
 
-void Action::Execute()
+void Action::Execute() const
 {
-	std::function<void()> executableFunction = currentAttributes->GetFunction();
+	std::function<void()> executableFunction = m_CurrentAttributes->GetFunction();
 	executableFunction();
 }
 
@@ -74,13 +74,13 @@ void Action::Execute()
 // -------------------------------------------------------------------------------
 
 // Vector to keep track + store all the action objects inside
-std::vector<Action*> ActionHandler::allCreatedActions;
+std::vector<Action*> ActionHandler::m_AllCreatedActions;
 
 // Creates an action with the given parameters
-void ActionHandler::CreateAction(int bindedKey, std::function<void()> bindedFunction, std::string bindedName)
+void ActionHandler::CreateAction(int bindedKey, const std::function<void()> bindedFunction, const std::string& bindedName)
 {
 	Action* newAction = new Action();
-	ActionAttributes* attributes = newAction->accessAttributes();
+	ActionAttributes* attributes = newAction->AccessAttributes();
 	
 	attributes->SetKey(bindedKey);
 	attributes->SetFunction(bindedFunction);
@@ -92,7 +92,7 @@ void ActionHandler::CreateAction(int bindedKey, std::function<void()> bindedFunc
 // Adds/removes the action from the main vector
 void ActionHandler::AddAction(Action* actionToAdd)
 {
-	allCreatedActions.push_back(actionToAdd);
+	m_AllCreatedActions.push_back(actionToAdd);
 }
 
 void ActionHandler::RemoveAction(std::string actionToRemove)
@@ -104,22 +104,22 @@ void ActionHandler::RemoveAction(std::string actionToRemove)
 		return;
 	}
 
-	for (std::vector<Action*>::iterator it = allCreatedActions.begin(); it != allCreatedActions.end();)
+	for (std::vector<Action*>::iterator it = m_AllCreatedActions.begin(); it != m_AllCreatedActions.end();)
 	{
 		if (*it == currentAction)
 		{
-			allCreatedActions.erase(it);
+			m_AllCreatedActions.erase(it);
 			delete currentAction;
 			break;
 		}
 	}
 
-	allCreatedActions.shrink_to_fit();
+	m_AllCreatedActions.shrink_to_fit();
 }
 
 void ActionHandler::RemoveAllActions()
 {
-	if (!allCreatedActions.empty()) allCreatedActions.clear();
+	if (!m_AllCreatedActions.empty()) m_AllCreatedActions.clear();
 }
 
 // Retrieves a given action when given the name of the action
@@ -128,9 +128,9 @@ Action* ActionHandler::RetrieveAction(std::string bindedName)
 {
 	ActionAttributes* attributes;
 
-	for (Action* currentAction : allCreatedActions)
+	for (Action* currentAction : m_AllCreatedActions)
 	{
-		attributes = currentAction->accessAttributes();
+		attributes = currentAction->AccessAttributes();
 		if (attributes->GetName().compare(bindedName) == 0)
 		{
 			return currentAction;
@@ -146,8 +146,8 @@ Action* ActionHandler::RetrieveAction(std::string bindedName)
 // -------------------------------------------------------------------------------
 
 // Hashmaps linking the keys to the actions
-std::unordered_map<int, Action*> InputHandler::pressedActions;
-std::unordered_map<int, Action*> InputHandler::releasedActions;
+std::unordered_map<int, const Action*> InputHandler::m_PressedActions;
+std::unordered_map<int, const Action*> InputHandler::m_ReleasedActions;
 
 void InputHandler::Init(GLFWwindow* window)
 {
@@ -156,40 +156,40 @@ void InputHandler::Init(GLFWwindow* window)
 
 void InputHandler::ReleaseAllActions()
 {
-	if (!pressedActions.empty())
-		pressedActions.clear();
+	if (!m_PressedActions.empty())
+		m_PressedActions.clear();
 
-	if (!releasedActions.empty())
-		releasedActions.clear();
+	if (!m_ReleasedActions.empty())
+		m_ReleasedActions.clear();
 }
 
 // Attaches the action to the appropriate hash maps
-void InputHandler::AttachAction(Action* currentAction, int type)
+void InputHandler::AttachAction(const Action* currentAction, int type)
 {	 
-	ActionAttributes* currentAttributes = currentAction->accessAttributes();
+	ActionAttributes* currentAttributes = currentAction->AccessAttributes();
 	switch (type)
 	{
 		case GLFW_PRESS:
-			pressedActions.insert_or_assign(currentAttributes->GetKey(), currentAction);
+			m_PressedActions.insert_or_assign(currentAttributes->GetKey(), currentAction);
 			break;
 		case GLFW_RELEASE:
-			releasedActions.insert_or_assign(currentAttributes->GetKey(), currentAction);
+			m_ReleasedActions.insert_or_assign(currentAttributes->GetKey(), currentAction);
 			break;
 	}
 }	 
 
 // Detaches the action from the appropriate hash map
-void InputHandler::DetachAction(Action* currentAction, int key, int type)
+void InputHandler::DetachAction(const Action* currentAction, int key, int type)
 {
 	switch (type)
 	{
 		case GLFW_PRESS:
-			for (auto it = pressedActions.begin(); it != pressedActions.end();)
-				it->second == currentAction ? it = pressedActions.erase(it) : ++it;
+			for (auto it = m_PressedActions.begin(); it != m_PressedActions.end();)
+				it->second == currentAction ? it = m_PressedActions.erase(it) : ++it;
 			break;
 		case GLFW_RELEASE:
-			for (auto it = releasedActions.begin(); it != releasedActions.end();)
-				it->second == currentAction ? it = releasedActions.erase(it) : ++it;
+			for (auto it = m_ReleasedActions.begin(); it != m_ReleasedActions.end();)
+				it->second == currentAction ? it = m_ReleasedActions.erase(it) : ++it;
 			break;
 	}
 
@@ -199,7 +199,7 @@ void InputHandler::DetachAction(Action* currentAction, int key, int type)
 // Notifier functions telling all observers listening to execute their function
 void InputHandler::NotifyPressed(int currentKey)
 {
-	for (auto& [key, value] : pressedActions)
+	for (auto& [key, value] : m_PressedActions)
 	{
 		if (key == currentKey && value != nullptr)
 			value->Execute();
@@ -208,7 +208,7 @@ void InputHandler::NotifyPressed(int currentKey)
 
 void InputHandler::NotifyReleased(int currentKey)
 {
-	for (auto& [key, value] : releasedActions)
+	for (auto& [key, value] : m_ReleasedActions)
 	{
 		if (key == currentKey && value != nullptr)
 			value->Execute();

@@ -18,21 +18,21 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
 class ActionAttributes
 {
 	private:
-		std::string actionName;
+		std::string m_ActionName;
 
-		int bindedKey = NULL;
-		std::function<void()> actionFunction = nullptr;
+		int m_BindedKey = NULL;
+		std::function<void()> m_ActionFunction = nullptr;
 
-		bool toggleableAction = false;
-		bool actionUnavailable = false;
+		bool m_Toggleable = false;
+		bool m_Unavailable = false;
 	public:
-		int& GetKey();
-		std::function<void()> GetFunction();
-		std::string GetName();
+		int GetKey() const;
+		std::function<void()> GetFunction() const;
+		std::string GetName() const;
 
-		void SetKey(int currentKey);
-		void SetFunction(std::function<void()> currentFunction);
-		void SetName(std::string givenName);
+		void SetKey(const int currentKey);
+		void SetFunction(const std::function<void()> currentFunction);
+		void SetName(const std::string& givenName);
 
 		void SetToggleable(bool toggleable);
 		void SetUnavailable(bool unavailable);
@@ -46,14 +46,14 @@ class ActionAttributes
 class Action
 {
 private:
-	ActionAttributes* currentAttributes;
+	ActionAttributes* m_CurrentAttributes;
 public:
 	Action();
 	~Action();
 
-	ActionAttributes* accessAttributes();
+	ActionAttributes* AccessAttributes() const;
 
-	void Execute();
+	void Execute() const;
 };
 
 // -------------------------------------------------------------------------------
@@ -64,11 +64,23 @@ public:
 class ActionHandler
 {
 	private:
-		static std::vector<Action*> allCreatedActions;
+		static std::vector<Action*> m_AllCreatedActions;
 	public:
 		ActionHandler() = delete;
 	
-		static void CreateAction(int bindedKey, std::function<void()> bindedFunction, std::string bindedName);
+		static void CreateAction(int bindedKey, const std::function<void()> bindedFunction, const std::string& bindedName);
+
+		// This handles the ability to create non-returning actions for specific objects
+		template<typename T>
+		static void CreateAction(int bindedKey, void (T::*bindedFunction)(), T* instance, const std::string& bindedName)
+		{
+			std::function<void()> func = [bindedFunction, instance]()
+				{
+					(instance->*bindedFunction)();
+				};
+
+			CreateAction(bindedKey, func, bindedName);
+		}
 
 		static void AddAction(Action* actionToAdd);
 		static void RemoveAction(std::string actionToRemove);
@@ -86,16 +98,17 @@ class ActionHandler
 class InputHandler
 {
 	private:
-		static std::unordered_map<int, Action*> pressedActions;
-		static std::unordered_map<int, Action*> releasedActions;
+		// Maybe make the action* const?
+		static std::unordered_map<int, const Action*> m_PressedActions;
+		static std::unordered_map<int, const Action*> m_ReleasedActions;
 	public:
 		InputHandler() = delete;
 
 		static void Init(GLFWwindow* window);
 		static void ReleaseAllActions();
 
-		static void AttachAction(Action* currentAction, int type);
-		static void DetachAction(Action* currentAction, int key, int type);
+		static void AttachAction(const Action* currentAction, int type);
+		static void DetachAction(const Action* currentAction, int key, int type);
 
 		// find all actions linked to current key; we will iterate through bindedActions finding all possible keys
 		static void NotifyPressed(int currentKey);

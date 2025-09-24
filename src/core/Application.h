@@ -18,22 +18,47 @@
 // HELPER FUNCTIONS
 // -------------------------------------------------------------------------------
 
-void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+
+// -------------------------------------------------------------------------------
+// WINDOW CLASS
+// -------------------------------------------------------------------------------
+
+class Window
+{
+private:
+	GLFWwindow* m_Handle;
+
+	int m_WindowDimensions[4]; // Width, Height, XPos, YPos
+	bool m_InFullscreen;
+public:
+	Window(int width, int height, const std::string& title);
+	~Window();
+	
+	void Init() const;
+
+	GLFWwindow* ReturnWindow() const;
+
+	void SwapBuffers() const;
+	void PollEvents() const;
+
+	bool ShouldClose() const;
+
+	void SetFullscreen();
+};
 
 // -------------------------------------------------------------------------------
 // APPLICATION CLASS
 // -------------------------------------------------------------------------------
 
-// TODO: Separate application management into a window class (keeping with single responsibility rule)?
-// Maybe also add application info class which keeps all the information secure
+// TODO: Add application info class which keeps all the information secure
 
 // Class to handle everything to do with the application lifecycle
 class Application
 {
 private:
-	// The current window instance (only one window for now)
-	static GLFWwindow* m_CurrentWindow;
-	
+	static Window* m_CurrentWindow;
+
 	static bool m_RetrievedLibraries;
 	
 	static bool m_AppRunning;
@@ -42,9 +67,10 @@ private:
 public:
 	Application() = delete;
 	static bool CreateWindow();
+	static void InitialiseHandlers();
+
+	static void RegisterApplicationActions();
 
 	static void Run();
 	static void Shutdown();
-
-	static void SetFullscreen();
 };
