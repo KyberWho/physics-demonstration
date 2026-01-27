@@ -30,7 +30,9 @@ private:
 	GLFWwindow* m_Handle;
 
 	int m_WindowDimensions[4]; // Width, Height, XPos, YPos
-	bool m_InFullscreen;
+
+	bool m_InFullscreen = false;
+	bool m_MouseLocked = false;
 public:
 	Window(int width, int height, const std::string& title);
 	~Window();
@@ -45,13 +47,14 @@ public:
 	bool ShouldClose() const;
 
 	void SetFullscreen();
+	void ChangeMouseLock();
 };
 
 // -------------------------------------------------------------------------------
 // APPLICATION CLASS
 // -------------------------------------------------------------------------------
 
-// TODO: Add application info class which keeps all the information secure
+// TODO: Add application info class which keeps all the information secure (for future iterations only)
 
 // Class to handle everything to do with the application lifecycle
 class Application
@@ -62,7 +65,6 @@ private:
 	static bool m_RetrievedLibraries;
 	
 	static bool m_AppRunning;
-	static bool m_InFullscreen;
 
 public:
 	Application() = delete;

@@ -15,7 +15,7 @@ void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------------------------------
 
 Window::Window(int width, int height, const std::string& title)
-    : m_WindowDimensions{width, height, 0, 0}, m_InFullscreen(false)
+    : m_WindowDimensions{width, height, 0, 0}
 {
     if (!glfwInit())
     {
@@ -39,6 +39,7 @@ Window::Window(int width, int height, const std::string& title)
     }
 
     glfwMakeContextCurrent(m_Handle);
+	glfwSwapInterval(0); // Disables VSync
     Init();
 }
 
@@ -49,7 +50,7 @@ Window::~Window()
 
 void Window::Init() const
 {
-    glfwSetWindowSizeLimits(m_Handle, 640, 480, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    glfwSetWindowSizeLimits(m_Handle, WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
     glfwSetFramebufferSizeCallback(m_Handle, FramebufferSizeCallback);
 }
 
@@ -69,6 +70,7 @@ bool Window::ShouldClose() const
 {
     return glfwWindowShouldClose(m_Handle);
 }
+
 
 void Window::SetFullscreen()
 {
@@ -94,6 +96,20 @@ void Window::SetFullscreen()
     }
 }
 
+void Window::ChangeMouseLock()
+{
+    if (m_MouseLocked)
+    {
+        m_MouseLocked = false;
+        glfwSetInputMode(m_Handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    else
+    {
+        m_MouseLocked = true;
+        glfwSetInputMode(m_Handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+}
+
 // -------------------------------------------------------------------------------
 // APPLICATION CLASS
 // -------------------------------------------------------------------------------
@@ -104,9 +120,7 @@ void Window::SetFullscreen()
 Window* Application::m_CurrentWindow;
 
 bool Application::m_RetrievedLibraries;
-
 bool Application::m_AppRunning;
-bool Application::m_InFullscreen;
 
 // Initialises the window instance of the application
 bool Application::CreateWindow()
@@ -139,7 +153,10 @@ void Application::InitialiseHandlers()
 void Application::RegisterApplicationActions()
 {
     ActionHandler::CreateAction(GLFW_KEY_F11, &Window::SetFullscreen, m_CurrentWindow, "Toggle Fullscreen");
-    InputHandler::AttachAction(ActionHandler::RetrieveAction("Toggle Fullscreen"), GLFW_PRESS);
+    InputHandler::AttachAction(ActionHandler::RetrieveLastAction(), GLFW_PRESS);
+
+    ActionHandler::CreateAction(GLFW_KEY_Z, &Window::ChangeMouseLock, m_CurrentWindow, "Set Mouse Lock");
+    InputHandler::AttachAction(ActionHandler::RetrieveLastAction(), GLFW_PRESS);
 }
 
 // Terminates the program when called
@@ -153,9 +170,20 @@ void Application::Shutdown()
     glfwTerminate();
 }
 
-// Main application loop (need to refactor this to separate event handling and rendering)
+// Main application loop (need to refactor this to show off rendering)
 void Application::Run()
 {
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.0f,  0.5f, 0.0f
+	};
+
+    unsigned int VBO;
+	GLCall(glGenBuffers(1, &VBO));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+
     if (m_AppRunning) 
     {
         LOG_WARN("Application is already running!");

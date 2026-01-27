@@ -1,6 +1,11 @@
 #include "Input.h"
 #include "Logger.h"
 
+// -------------------------------------------------------------------------------
+// CALLBACK FUNCTIONS
+// -------------------------------------------------------------------------------
+
+// Recieves input and notifies all observers of said input
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     switch (action)
@@ -141,6 +146,13 @@ Action* ActionHandler::RetrieveAction(std::string bindedName)
 	return nullptr;
 }
 
+Action* ActionHandler::RetrieveLastAction()
+{
+	if (!m_AllCreatedActions.empty()) return m_AllCreatedActions.back();
+
+	return nullptr;
+}
+
 // -------------------------------------------------------------------------------
 // INPUT CLASS
 // -------------------------------------------------------------------------------
@@ -166,6 +178,12 @@ void InputHandler::ReleaseAllActions()
 // Attaches the action to the appropriate hash maps
 void InputHandler::AttachAction(const Action* currentAction, int type)
 {	 
+	if (currentAction == nullptr)
+	{
+		LOG_ERR("Unable to attach given action!");
+		return;
+	}
+
 	ActionAttributes* currentAttributes = currentAction->AccessAttributes();
 	switch (type)
 	{
@@ -181,6 +199,12 @@ void InputHandler::AttachAction(const Action* currentAction, int type)
 // Detaches the action from the appropriate hash map
 void InputHandler::DetachAction(const Action* currentAction, int key, int type)
 {
+	if (currentAction == nullptr)
+	{
+		LOG_WARN("Passed in a nullptr to DetachAction!");
+		return;
+	}
+
 	switch (type)
 	{
 		case GLFW_PRESS:

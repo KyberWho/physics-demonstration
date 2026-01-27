@@ -7,7 +7,12 @@
 #include <unordered_map>
 #include <vector>
 
-// Callback function used with recieving input and notifying all observers of said input
+// TODO: Need to add in a factory design pattern for creating actions + action attributes (to do in future iterations)
+
+// -------------------------------------------------------------------------------
+// CALLBACK FUNCTIONS
+// -------------------------------------------------------------------------------
+
 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 // -------------------------------------------------------------------------------
@@ -88,6 +93,7 @@ class ActionHandler
 		static void RemoveAllActions();
 
 		static Action* RetrieveAction(std::string bindedName);
+		static Action* RetrieveLastAction();
 };
 
 // -------------------------------------------------------------------------------
@@ -98,7 +104,7 @@ class ActionHandler
 class InputHandler
 {
 	private:
-		// Maybe make the action* const?
+		// Made const to avoid accidental modification of actions
 		static std::unordered_map<int, const Action*> m_PressedActions;
 		static std::unordered_map<int, const Action*> m_ReleasedActions;
 	public:

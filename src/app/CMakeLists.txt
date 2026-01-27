@@ -7,6 +7,7 @@ set_target_properties(physics-simulation PROPERTIES
 target_link_libraries(physics-simulation
 	PUBLIC
 		core
+		rendering
 		thirdparty_rendering
 		utils
 )
