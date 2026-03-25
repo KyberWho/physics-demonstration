@@ -1,5 +1,7 @@
 #include "Application.h"
 
+// TODO: NEED TO WRITE A TEXTURE HANDLER THAT DEALS WITH ALLOCATING + DEALLOCATING TEXTURES
+
 // -------------------------------------------------------------------------------
 // HELPER FUNCTIONS
 // -------------------------------------------------------------------------------
@@ -10,12 +12,22 @@ void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+void CursorPositionCallback(GLFWwindow* window, double xposIn, double yposIn)
+{
+    Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+    // Makes sure the user is in locked mouse mode before allowing unlimited mouse movement
+    if (currentWindow->IsMouseLocked())
+        Application::ProcessMouseInput((float)xposIn, (float)yposIn);
+}
+
 // -------------------------------------------------------------------------------
 // WINDOW CLASS
 // -------------------------------------------------------------------------------
 
 Window::Window(int width, int height, const std::string& title)
-    : m_WindowDimensions{width, height, 0, 0}
+    : m_WindowDimensions{width, height, 0, 0},
+	  m_ScreenDimensions{(unsigned int) width, (unsigned int) height}
 {
     if (!glfwInit())
     {
@@ -31,6 +43,8 @@ Window::Window(int width, int height, const std::string& title)
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, OPENGL_DEBUG_MODE);
 
     m_Handle = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+
+    glfwSetWindowUserPointer(m_Handle, this); // Links Window class to the handle
 
     if (!m_Handle)
     {
@@ -48,19 +62,24 @@ Window::~Window()
     if (m_Handle) glfwDestroyWindow(m_Handle);
 }
 
+// Sets the minimum window size and window callbacks
 void Window::Init() const
 {
     glfwSetWindowSizeLimits(m_Handle, WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
     glfwSetFramebufferSizeCallback(m_Handle, FramebufferSizeCallback);
+
+	glfwSetCursorPosCallback(m_Handle, CursorPositionCallback);
 }
 
 GLFWwindow* Window::ReturnWindow() const { return m_Handle; }
 
+// Swaps the front and back buffers (where everything is being drawn) of the window (double buffering)
 void Window::SwapBuffers() const
 {
     glfwSwapBuffers(m_Handle);
 }
 
+// Polls for and processes events (e.g keyboard input, mouse input, window resizing, etc.)
 void Window::PollEvents() const
 {
     glfwPollEvents();
@@ -70,7 +89,6 @@ bool Window::ShouldClose() const
 {
     return glfwWindowShouldClose(m_Handle);
 }
-
 
 void Window::SetFullscreen()
 {
@@ -98,8 +116,13 @@ void Window::SetFullscreen()
 
 void Window::ChangeMouseLock()
 {
+    double xPos, yPos;
+
     if (m_MouseLocked)
     {
+        glfwGetCursorPos(m_Handle, &xPos, &yPos);
+        Application::EnableFreeMouseMovement(xPos, yPos);
+
         m_MouseLocked = false;
         glfwSetInputMode(m_Handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
@@ -118,14 +141,23 @@ void Window::ChangeMouseLock()
 
 // Holds the current window of the application (only one for now)
 Window* Application::m_CurrentWindow;
+Camera* Application::m_Camera;
+TextureRenderer* Application::m_TextureRenderer;
+MeshRenderer* Application::m_MeshRenderer;
 
+bool Application::m_FirstMouse = true;
 bool Application::m_RetrievedLibraries;
 bool Application::m_AppRunning;
+
+float Application::m_LastX;
+float Application::m_LastY;
 
 // Initialises the window instance of the application
 bool Application::CreateWindow()
 {
     m_CurrentWindow = new Window(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, APP_NAME);
+	m_LastX = (float)WINDOW_DEFAULT_WIDTH / 2.0f;
+    m_LastY = (float)WINDOW_DEFAULT_HEIGHT / 2.0f;
 
     Application::InitialiseHandlers();
 
@@ -138,7 +170,7 @@ bool Application::CreateWindow()
 
 	LOG_INFO("OpenGL " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << " has been loaded.");
 
-    m_AppRunning, m_RetrievedLibraries = true;
+    m_RetrievedLibraries = true;
 
     return true;
 }
@@ -146,10 +178,15 @@ bool Application::CreateWindow()
 // Initialises all handlers where necessary (e.g player controllers, camera controllers, etc.)
 void Application::InitialiseHandlers()
 {
+	if (glfwRawMouseMotionSupported())
+    {
+        glfwSetInputMode(m_CurrentWindow->ReturnWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    }
+
     InputHandler::Init(m_CurrentWindow->ReturnWindow());
 }
 
-// Sets up default application actions (e.g fullscreen, unlock mouse, etc.)
+// Sets up default application system actions (e.g fullscreen, unlock mouse, etc.)
 void Application::RegisterApplicationActions()
 {
     ActionHandler::CreateAction(GLFW_KEY_F11, &Window::SetFullscreen, m_CurrentWindow, "Toggle Fullscreen");
@@ -159,30 +196,62 @@ void Application::RegisterApplicationActions()
     InputHandler::AttachAction(ActionHandler::RetrieveLastAction(), GLFW_PRESS);
 }
 
-// Terminates the program when called
+void Application::EnableFreeMouseMovement(double xPos, double yPos)
+{
+    m_LastX = xPos;
+    m_LastY = yPos;
+    m_FirstMouse = true;
+}
+
+// Terminates the program when called (eventually need to refactor to delete renderers automatically when they go out of scope instead of manually deleting them here)
 void Application::Shutdown()
 {
     m_AppRunning = false;
     InputHandler::ReleaseAllActions();
     ActionHandler::RemoveAllActions();
 
+	delete m_Camera;
+	m_Camera = nullptr;
+
+    delete m_TextureRenderer;
+    m_TextureRenderer = nullptr;
+
+    delete m_MeshRenderer;
+	m_MeshRenderer = nullptr;
+
     delete m_CurrentWindow;
+    m_CurrentWindow = nullptr;
+
     glfwTerminate();
 }
 
-// Main application loop (need to refactor this to show off rendering)
+// Main application loop
 void Application::Run()
 {
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-	};
+    GLCall(glEnable(GL_DEPTH_TEST))
 
-    unsigned int VBO;
-	GLCall(glGenBuffers(1, &VBO));
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+	m_CurrentWindow->ChangeMouseLock(); // Locks the mouse to the center of the window and hides it (for testing purposes only, need to change for the future)
+
+	m_Camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
+	m_TextureRenderer = new TextureRenderer();
+    m_TextureRenderer->Init(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT);
+
+    m_MeshRenderer = new MeshRenderer();
+	m_MeshRenderer->Init(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT);
+    
+    Texture* testTexture = new Texture("assets/textures/maxwell.jpg");    
+	float textureParameters[] = { 500.0f, 360.0f, 256.0f, 256.0f }; // xPos, yPos, width, height
+
+	BoxMesh* testMesh = new BoxMesh(testTexture);
+	testMesh->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	glm::vec3 boxHalfExtents = testMesh->GetScale() * 0.5f; // Assuming the original cube mesh is a unit cube, we can calculate the half extents by multiplying the scale by 0.5
+	Box* testBoxShape = new Box(boxHalfExtents, testMesh->GetScale());
+    
+    RigidBody* testDynamicRigidBody = new RigidBody((Shape*) testBoxShape, 1.0f);
+
+	Entity* testEntity = new Entity(testMesh, testDynamicRigidBody);
 
     if (m_AppRunning) 
     {
@@ -190,15 +259,93 @@ void Application::Run()
         return;
     }
 
+    m_AppRunning = true;
+
     Application::RegisterApplicationActions();
+	
+    PhysicsEngine::Init();
+	PhysicsEngine::AddRigidBody(testDynamicRigidBody);
+
+	testDynamicRigidBody->AddForce(glm::vec3(0.0f, 50.0f, 0.0f)); // Adds an initial upward force to the cube for testing purposes only
+	testDynamicRigidBody->AddTorque(glm::vec3(0.0f, 0.0f, 10.0f)); // Adds an initial torque to the cube for testing purposes only
+
+    // background colour (dark grey)
+    GLCall(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
+    int currentWindowWidth, currentWindowHeight;
 
     while(!m_CurrentWindow->ShouldClose())
     {
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        glfwGetWindowSize(m_CurrentWindow->ReturnWindow(), &currentWindowWidth, &currentWindowHeight);
+        m_CurrentWindow->SetScreenWidth(currentWindowWidth);
+        m_CurrentWindow->SetScreenHeight(currentWindowHeight);
+        
+        GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
+        TimeManager::Update();
+
+		PhysicsEngine::Step();
+		testEntity->Sync();
+
+        m_MeshRenderer->DrawCubeMesh(testMesh, m_Camera->GetViewMatrix(), m_CurrentWindow->GetScreenWidth(), m_CurrentWindow->GetScreenHeight());
+
+        // m_TextureRenderer->Draw(testTexture, textureParameters);
+
+		// Rotates the cube by 5 degrees on the x-axis every second (for testing purposes only)
+        //glm::vec3 currentRotation = testMesh->GetRotation();
+        //currentRotation.x += (5.0f * TimeManager::DeltaTime());
+        //testMesh->SetRotation(currentRotation);
+		Application::ProcessKeyboardInput();
 
         m_CurrentWindow->SwapBuffers();
         m_CurrentWindow->PollEvents();
     }
-    
+
+	// Need to delete these automatically eventually via resource handlers instead of manually deleting them here
+    delete testEntity;
+	testEntity = nullptr;
+
+	delete testMesh;
+    testMesh = nullptr;
+
+    delete testTexture;
+    testTexture = nullptr;
+
+	PhysicsEngine::Shutdown();
     Application::Shutdown();
+}
+
+// -------------------------------------------------------------------------------
+// APPLICATION CALLBACK FUNCTIONS
+// -------------------------------------------------------------------------------
+
+void Application::ProcessMouseInput(float xpos, float ypos)
+{
+    if (m_FirstMouse)
+    {
+        m_LastX = xpos;
+        m_LastY = ypos;
+        m_FirstMouse = false;
+    }
+
+    float xOffset = xpos - m_LastX;
+    float yOffset = m_LastY - ypos; // reversed since y-coordinates go from bottom to top
+    m_LastX = xpos;
+    m_LastY = ypos;
+
+	m_Camera->ProcessMouse(xOffset, yOffset);
+}
+
+// REFACTOR EVENTUALLY TO WORK WITH INPUT HANDLER INSTEAD OF HAVING THIS CALLBACK HERE (TO DO IN FUTURE ITERATIONS)
+void Application::ProcessKeyboardInput()
+{
+	GLFWwindow* currentHandle = m_CurrentWindow->ReturnWindow();
+
+    if (glfwGetKey(currentHandle, GLFW_KEY_W) == GLFW_PRESS)
+        m_Camera->ProcessKeyboard(FORWARD, TimeManager::DeltaTime());
+    if (glfwGetKey(currentHandle, GLFW_KEY_S) == GLFW_PRESS)
+        m_Camera->ProcessKeyboard(BACKWARD, TimeManager::DeltaTime());
+    if (glfwGetKey(currentHandle, GLFW_KEY_A) == GLFW_PRESS)
+        m_Camera->ProcessKeyboard(LEFT, TimeManager::DeltaTime());
+    if (glfwGetKey(currentHandle, GLFW_KEY_D) == GLFW_PRESS)
+        m_Camera->ProcessKeyboard(RIGHT, TimeManager::DeltaTime());
 }

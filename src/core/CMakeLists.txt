@@ -13,6 +13,7 @@ configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/Config.h
 )
+
 target_include_directories(core PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}					# Include source files in current directory (e.g src/core)
 	${CMAKE_CURRENT_BINARY_DIR}					# Include generated config file (Config.h)
@@ -25,6 +26,9 @@ target_include_directories(core PUBLIC
 # Link any required libraries
 target_link_libraries(core 
 	PUBLIC
+		physics-engine
+		rendering
 		thirdparty_rendering
+		scenes
 		utils
 )	
