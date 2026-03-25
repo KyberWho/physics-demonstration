@@ -3,23 +3,18 @@
 // Entry point of the application
 int main()
 {
-	bool windowCreated = Application::CreateWindow();
+	std::cout << "\nApplication Name: " << APP_NAME << '\n';
+	std::cout << "Application Version: v" << APP_VERSION_MAJOR << "." <<
+		APP_VERSION_MINOR << "\n\n";
 
-	if (!windowCreated)
+	if (!Application::CreateWindow())
 	{
-		std::cerr << "Failed to create application instance\n";
+		LOG_ERR("Failed to start application instance\n");
 		return -1;
 	}
 
-	std::cout << "Application Name: " << APP_NAME << '\n';
-	std::cout << "Application Version: v" << APP_VERSION_MAJOR << "." <<
-		APP_VERSION_MINOR << '\n';
+	Application::Run();
 
-	if (!Application::UpdateWindow())
-	{
-		Application::TerminateWindow();
-		return 0;
-	}
-
+	// Should never reach here
 	return -1;
 }
