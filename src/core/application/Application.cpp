@@ -228,11 +228,17 @@ void Application::Shutdown()
 // Main application loop
 void Application::Run()
 {
+	// Used for presentation purposes only to give random forces to cubes, will be removed in the future when we have a proper physics system in place with more interesting interaction
+    std::default_random_engine generator;
+    std::uniform_real_distribution<float> distribution(-100.0f, 100.0f);
+
+	auto randomForce = [&generator, &distribution]() { return distribution(generator); };
+
     GLCall(glEnable(GL_DEPTH_TEST))
 
-	m_CurrentWindow->ChangeMouseLock(); // Locks the mouse to the center of the window and hides it (for testing purposes only, need to change for the future)
+	// m_CurrentWindow->ChangeMouseLock(); // Locks the mouse to the center of the window and hides it (for testing purposes only, need to change for the future)
 
-	m_Camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	m_Camera = new Camera(glm::vec3(0.0f, 0.0f, 20.0f));
 
 	m_TextureRenderer = new TextureRenderer();
     m_TextureRenderer->Init(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT);
@@ -243,15 +249,35 @@ void Application::Run()
     Texture* testTexture = new Texture("assets/textures/maxwell.jpg");    
 	float textureParameters[] = { 500.0f, 360.0f, 256.0f, 256.0f }; // xPos, yPos, width, height
 
-	BoxMesh* testMesh = new BoxMesh(testTexture);
-	testMesh->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    BoxMesh* meshList[MAX_ENTITIES] = {}; // Used to deallocate mesh memory later
+    Entity* entityList[MAX_ENTITIES] = {}; // Used to deallocate entity memory later
 
-	glm::vec3 boxHalfExtents = testMesh->GetScale() * 0.5f; // Assuming the original cube mesh is a unit cube, we can calculate the half extents by multiplying the scale by 0.5
-	Box* testBoxShape = new Box(boxHalfExtents, testMesh->GetScale());
+	RigidBody* rigidBodyList[MAX_ENTITIES] = {}; // Used to give random forces to cubes later (for presentation purposes only)  
+
+	// Initialises a grid of cubes with physics bodies for presentation purposes
+    for (int i = 0; i < MAX_GRID_SIZE; i++)
+    {
+        for (int j = 0; j < MAX_GRID_SIZE; j++)
+        {
+			int currentIndex = (i * MAX_GRID_SIZE) + j;
+            BoxMesh* testMesh = new BoxMesh(testTexture);
+            meshList[currentIndex] = testMesh;
+
+            testMesh->SetPosition(glm::vec3(-1.0f + (float) i, 0.0f, -1.0f + (float) j));
+
+            glm::vec3 boxHalfExtents = testMesh->GetScale() * 0.5f; // Assuming the original cube mesh is a unit cube, we can calculate the half extents by multiplying the scale by 0.5
+            Box* testBoxShape = new Box(boxHalfExtents, testMesh->GetScale());
+
+            RigidBody* testDynamicRigidBody = new RigidBody((Shape*)testBoxShape, 1.0f, testMesh->GetPosition());
+            rigidBodyList[currentIndex] = testDynamicRigidBody;
+
+			Entity* testEntity = new Entity(testMesh, testDynamicRigidBody);
+			entityList[currentIndex] = testEntity;
+
+        }
+	}
     
-    RigidBody* testDynamicRigidBody = new RigidBody((Shape*) testBoxShape, 1.0f);
-
-	Entity* testEntity = new Entity(testMesh, testDynamicRigidBody);
+    LOG_INFO("Instantiated " << MAX_ENTITIES << " entities..");
 
     if (m_AppRunning) 
     {
@@ -264,36 +290,50 @@ void Application::Run()
     Application::RegisterApplicationActions();
 	
     PhysicsEngine::Init();
-	PhysicsEngine::AddRigidBody(testDynamicRigidBody);
 
-	testDynamicRigidBody->AddForce(glm::vec3(0.0f, 50.0f, 0.0f)); // Adds an initial upward force to the cube for testing purposes only
-	testDynamicRigidBody->AddTorque(glm::vec3(0.0f, 0.0f, 10.0f)); // Adds an initial torque to the cube for testing purposes only
+    for (int i = 0; i < MAX_ENTITIES; i++)
+    {
+		RigidBody* currentBody = rigidBodyList[i];
+        PhysicsEngine::AddRigidBody(currentBody);
+        
+        currentBody->AddForce(glm::vec3(randomForce(), randomForce() * 10.0f, randomForce())); // Adds an initial upward force to the cube for testing purposes only
+        currentBody->AddTorque(glm::vec3(randomForce(), 0.0f, randomForce())); // Adds an initial torque to the cube for testing purposes only
+    }
 
     // background colour (dark grey)
     GLCall(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
     int currentWindowWidth, currentWindowHeight;
 
-    while(!m_CurrentWindow->ShouldClose())
+    while (!m_CurrentWindow->ShouldClose())
     {
         glfwGetWindowSize(m_CurrentWindow->ReturnWindow(), &currentWindowWidth, &currentWindowHeight);
         m_CurrentWindow->SetScreenWidth(currentWindowWidth);
         m_CurrentWindow->SetScreenHeight(currentWindowHeight);
-        
+
         GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
+		// Used to ensure a fixed time step for physics simulation regardless of frame rate (via "Fix Your Timestep" method described by Gaffer on Games: https://gafferongames.com/post/fix_your_timestep/)
+		static float timeAccumulator = 0.0f;
+        
         TimeManager::Update();
+		timeAccumulator += TimeManager::DeltaTime();
 
-		PhysicsEngine::Step();
-		testEntity->Sync();
+        while (timeAccumulator >= PhysicsEngine::GetPhysicsTimeStep())
+        {
+            PhysicsEngine::Step();
+            timeAccumulator -= PhysicsEngine::GetPhysicsTimeStep();
+		}
 
-        m_MeshRenderer->DrawCubeMesh(testMesh, m_Camera->GetViewMatrix(), m_CurrentWindow->GetScreenWidth(), m_CurrentWindow->GetScreenHeight());
+		// Syncs the entity's mesh position/rotation with the physics body's position/rotation and draws the mesh 
+        // (eventually need to refactor to have a proper scene graph and render queue instead of doing this in the main loop here)
+        for (int i = 0; i < MAX_ENTITIES; i++)
+        { 
+            entityList[i]->Sync();
+            m_MeshRenderer->DrawCubeMesh(meshList[i], m_Camera->GetViewMatrix(), m_CurrentWindow->GetScreenWidth(), m_CurrentWindow->GetScreenHeight());
+        }
 
         // m_TextureRenderer->Draw(testTexture, textureParameters);
 
-		// Rotates the cube by 5 degrees on the x-axis every second (for testing purposes only)
-        //glm::vec3 currentRotation = testMesh->GetRotation();
-        //currentRotation.x += (5.0f * TimeManager::DeltaTime());
-        //testMesh->SetRotation(currentRotation);
 		Application::ProcessKeyboardInput();
 
         m_CurrentWindow->SwapBuffers();
@@ -301,11 +341,15 @@ void Application::Run()
     }
 
 	// Need to delete these automatically eventually via resource handlers instead of manually deleting them here
-    delete testEntity;
-	testEntity = nullptr;
 
-	delete testMesh;
-    testMesh = nullptr;
+    for (int i = 0; i < MAX_ENTITIES; i++)
+    {
+        delete entityList[i];
+		entityList[i] = nullptr;
+
+		delete meshList[i];
+		meshList[i] = nullptr;
+    }
 
     delete testTexture;
     testTexture = nullptr;

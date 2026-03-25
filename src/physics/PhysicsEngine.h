@@ -27,6 +27,9 @@ class PhysicsEngine
 		static void Shutdown();
 
 		static void AddRigidBody(RigidBody* body) { m_RigidBodies.push_back(body); }
+
 		static void Init();
 		static void Step();
+
+		static const float GetPhysicsTimeStep() { return timeStep; }
 };

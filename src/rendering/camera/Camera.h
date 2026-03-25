@@ -30,7 +30,6 @@ const glm::vec3 CAM_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 const float CAM_YAW = -90.0f;
 const float CAM_PITCH = 0.0f;
 
-
 class Camera
 {
 private:
