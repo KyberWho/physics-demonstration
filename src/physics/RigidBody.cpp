@@ -2,8 +2,8 @@
 
 // TODO: add bounding shape and collision detection 
 
-RigidBody::RigidBody(Shape* givenShape, float mass)
-	: m_Shape(givenShape), m_Mass(mass)
+RigidBody::RigidBody(Shape* givenShape, float mass, glm::vec3 position)
+	: m_Shape(givenShape), m_Mass(mass), m_Position(position)
 {
 	m_InvMass = (mass > 0.0f) ? 1.0f / mass : 0.0f; // If mass is zero, then the rigid body is immovable (static)
 }
@@ -42,10 +42,10 @@ void RigidBody::Update(float dt)
     glm::vec3 acceleration = m_CurrentForces * m_InvMass;
     m_Velocity += acceleration * dt;
     m_Position += m_Velocity * dt;
-    LOG_INFO("(" << m_Position.x << "," << m_Position.y << "," << m_Position.z << ")")
+    //LOG_INFO("(" << m_Position.x << "," << m_Position.y << "," << m_Position.z << ")")
 
     // Angular motion
-    glm::vec3 angularAcceleration = m_CurrentTorque;
+    glm::vec3 angularAcceleration = m_CurrentTorque * m_InvMass;
     m_AngularVelocity += angularAcceleration * dt;
 
     glm::quat deltaRotation = glm::quat(0,

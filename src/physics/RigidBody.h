@@ -28,7 +28,7 @@ class RigidBody
 		glm::vec3 m_CurrentForces{ 0.0f }; // All forces acting on the rigid body will be stored here, used to calculate acceleration later on
 		glm::vec3 m_CurrentTorque{ 0.0f }; // All torques acting on the rigid body will be stored here, used to calculate angular acceleration later on
 	public:
-		RigidBody(Shape* givenShape, float mass);
+		RigidBody(Shape* givenShape, float mass, glm::vec3 position);
 		~RigidBody();
 		
 		void Update(float dt);
