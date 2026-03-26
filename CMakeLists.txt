@@ -1,13 +1,14 @@
 ﻿# CMakeList.txt : Top-level CMake project file, do global configuration
 # and include sub-projects here.
-cmake_minimum_required (VERSION 3.16)
-project("physics-demonstration" VERSION 0.5)
+cmake_minimum_required(VERSION 3.16)
+project("physics-demonstration" VERSION 0.9)
 
 # -------------------------------------------------------------------------------
 # APPLICATION PARAMETERS (edit these values if needed)
 # -------------------------------------------------------------------------------
 
 set(OPENGL_DEBUG_MODE false)
+set(VSYNC_ENABLED false)
 
 # -------------------------------------------------------------------------------
 # BUILD CONFIGURATION
@@ -29,4 +30,7 @@ add_subdirectory("libs")
 # Include engine modules.
 add_subdirectory("src/app")
 add_subdirectory("src/core")
+add_subdirectory("src/physics")
+add_subdirectory("src/rendering")
+add_subdirectory("src/scenes")
 add_subdirectory("src/utils")
